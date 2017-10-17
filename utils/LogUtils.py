@@ -25,26 +25,3 @@ def timeit(method):
         return result
 
     return timed
-
-def testPath():
-    print 'os.path.dirname: '+os.path.dirname(os.path.abspath(__file__))
-    print 'os.getcwd: '+os.getcwd()
-
-
-
-# Read fileNames once from init.py - logging.conf
-# Log should be based on input fileName param - Logger & getLogger('simpleExample')
-# Logger should also work fine with static methods, when ingested through param
-# Should support diff log levels [5] - logger.debug()
-
-# def log(logger, log_str, level):
-#     writeLog(logger, log_str)
-#     return
-#
-# def logErr(file, log_str, err):
-#     errStr = log_str + str(err)
-#     writeLog(file, errStr)
-#     return
-#
-# def writeLog(logger, str):
-#     logger.write(str)

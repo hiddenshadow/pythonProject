@@ -1,0 +1,6 @@
+*.pyc
+*.log
+.idea/workspace.xml
+
+configuration/local_config.cfg
+configuration/config.cfg

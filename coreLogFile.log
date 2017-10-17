@@ -1,8 +1,0 @@
-2017-10-16 18:24:53,510 - core - INFO - Starting WelcomeCall Allocator
- - None
-2017-10-16 18:24:53,510 - root - ERROR - Printing stacktrace:  - (<type 'exceptions.Exception'>, Exception('Test Error in Core.',), <traceback object at 0x7f159f3cabd8>)
-Traceback (most recent call last):
-  File "init.py", line 39, in execute
-    raise (Exception("Test Error in Core."))
-Exception: Test Error in Core.
-2017-10-16 18:24:53,510 - root - INFO - 'execute' 0.00 sec - None

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from utils import DBUtils
+import logging
 
 class Allocator:
 
@@ -23,7 +24,7 @@ class Allocator:
 		qry = 'SELECT id FROM welcome_calls WHERE '
 		qry = qry + self.getMultipleStatusQryStr(welCalStatusToPick)
 		qry = qry + ' limit '+str(max)
-		# print qry
+		logging.debug(qry)
 		return qry
 
 	def getMaxValWelCal(self,max):
@@ -35,30 +36,30 @@ class Allocator:
 	def getRemCountForAgent(self,agentId, limit, pendStatus,host,user,password,database,port):
 		qry = 'SELECT COUNT(*) FROM welcome_calls WHERE agent_id='+str(agentId)+' AND '+' status='+str(pendStatus)
 		rem = DBUtils.executeSelectQuery(qry, host, user, password, database, port)
-		# print 'rem='+str(rem)
+		logging.debug('rem='+str(rem))
 		return (limit - int(rem[0][0]))
 
 	def setRemWelCalToAgent(self,agentId, rem, allocatingStatus, welCalStatusToPick,host,user,password,database,port):
 		qry = 'UPDATE welcome_calls SET agent_id='+str(agentId)+',status='+str(allocatingStatus)+' WHERE '
 		qry = qry + self.getMultipleStatusQryStr(welCalStatusToPick)
 		qry = qry + ' limit '+str(rem)
-		print qry
-		DBUtils.executeUpdateQuery(qry, host, user, password, database, port)
-		return
+		logging.debug(qry)
+		updatedCount = DBUtils.executeUpdateQuery(qry, host, user, password, database, port)
+		return updatedCount
 
 
 	def getAgents(self,role,host,user,password,database,port):
 
 		filterAgentsQuery = 'SELECT user_id, role_id FROM bima_user_role_permission WHERE user_id > 0 and role_id = '+role
-		# print filterAgentsQuery
+		logging.debug(filterAgentsQuery)
 
 		validAgents = DBUtils.executeSelectQuery(filterAgentsQuery, host, user, password, database, port)
 		return validAgents
 
 
 	def allocate(self):
-		print 'allocate()'
 		try:
+			totalCals=0
 			configObj = self.__config
 
 			allocatingStatus=configObj.allocatingStatus()
@@ -75,23 +76,25 @@ class Allocator:
 			agents = self.getAgents(role,host,user,password,database,port)
 
 			if len(agents) == 0:
-				print 'No valid Agents found: '+agents
+				logging.warn('No valid Agents found: '+agents)
 				return
 
 			for agent in agents:
-				print ''
-				print 'agent - '+str(agent)
+
+				logging.debug('Assigning to agent - '+str(agent)+'\n')
 				agentId = agent[0]
 				rem = (self.getRemCountForAgent(agentId,assignlimit,allocatingStatus,host,user,password,database,port))
 				if rem > 0:
-					print 'rem - '+str(rem)
 					# In case no rows affected, we can check if there are any welcome calls remaining, else stop.
-					self.setRemWelCalToAgent(agentId, rem, allocatingStatus, welCalStatusToPick,host,user,password,database,port)
+					assigned=self.setRemWelCalToAgent(agentId, rem, allocatingStatus, welCalStatusToPick,host,user,password,database,port)
+					logging.info('Need to assign '+str(rem)+' calls, got assigned '+str(assigned)+' calls for agent: '+str(agent)+'\n')
+					totalCals = totalCals + assigned
 				else:
-					print 'No more assignment required for agent:'+str(agent)
+					logging.info('No more assignment required for agent:'+str(agent))
 
-		except Exception as e:
-			print 'Exception while allocating'
+				logging.info("Total calls assigned: %s",totalCals)
+		except Exception, e:
+			logging.error('Exception while allocating')
 			raise e
 		finally:
 			pass

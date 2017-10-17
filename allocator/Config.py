@@ -2,7 +2,7 @@
 
 class Config:
 
-    def __init__(self, host,user,password,database,port,assignCount,role,customerTable,roleTable,welCalStatusToPick,allocatingStatus,logConfigFile):
+    def __init__(self, host,user,password,database,port,assignCount,role,customerTable,roleTable,welCalStatusToPick,allocatingStatus,logConfigFile,appName):
         self.__host = host
         self.__user = user
         self.__password = password
@@ -15,11 +15,12 @@ class Config:
         self.__welCalStatusToPick = welCalStatusToPick
         self.__allocatingStatus = allocatingStatus
         self.__logConfigFile = logConfigFile
+        self.__appName = appName
+
         # self.__errorLogFile = errorLogFile
         # self.__infoLogFile = infoLogFile
 
-
-# @property
+    # @property
     def host(self):
         return self.__host
 
@@ -67,10 +68,6 @@ class Config:
     def logConfigFile(self):
         return self.__logConfigFile
 
-    # # @property
-    # def errorLogFile(self):
-    #     return self.__errorLogFile
-    #
-    # # @property
-    # def infoLogFile(self):
-    #     return self.__infoLogFile
+    # @property
+    def appName(self):
+        return self.__appName

@@ -2,7 +2,7 @@
 
 import ConfigParser
 from allocator.Config import Config
-from utils.LogUtils import timeit,testPath
+from utils.LogUtils import timeit
 
 
 def getValue(section, property, configParser):
@@ -24,21 +24,20 @@ def log(logStr):
 	return
 
 @timeit
-def getConfig(config_files, def_file):
+def getConfig(config_file, def_file):
 	configObj=None
-
 	try:
 		configParser = ConfigParser.RawConfigParser()
 		configParser.readfp(open(def_file)) # Reading default config.
 
-		if config_files is None:
+		if config_file is None:
 			log('No config files added! Using default configs.')
-		elif len(config_files) == 0 :
+		elif len(config_file) == 0 :
 			log('Empty config files list! Using default configs.')
 		else:
-			dataset = configParser.read(config_files)
-			if len(dataset) != len(config_files):
-				raise ValueError, "Failed to open/find all files"
+			dataset = configParser.read(config_file)
+			if len(dataset) != 1:
+				raise ValueError, "Failed to open/find config file: "+config_file
 
 		# Todo: Validate Config data
 		host = getValue("db" , 'host', configParser)
@@ -46,55 +45,27 @@ def getConfig(config_files, def_file):
 		password = getValue('db', 'password', configParser)
 		database = getValue('db', 'database', configParser)
 		port = getValue('db', 'port', configParser)
-		assignCount = getIntValue('db', 'assignCount', configParser)
-		role = getValue('db', 'role', configParser)
-		customerTable = getValue('db', 'customerTable', configParser)
-		roleTable = getValue('db', 'roleTable', configParser)
+		assignCount = getIntValue('allocation', 'assignCount', configParser)
+		role = getValue('allocation', 'role', configParser)
+		customerTable = getValue('allocation', 'customerTable', configParser)
+		roleTable = getValue('allocation', 'roleTable', configParser)
 
 		welCalStatusToPick = getValue('allocation', 'welCalStatusToPick', configParser)
 		allocatingStatus = getValue('allocation', 'allocatingStatus', configParser)
 
 		logConfigFile = getValue('logging', 'logConfigFile', configParser)
-
-		# errorLogFile = getValue('logging', 'errorLogFile', configParser)
-		# infoLogFile = getValue('logging', 'infoLogFile', configParser)
+		appName= getValue('logging', 'appName', configParser)
 
 
 		configObj = Config(host=host,user=user,password=password,database=database,port=port,
 						   assignCount=assignCount,role=role,customerTable=customerTable,
 						   roleTable=roleTable,welCalStatusToPick=welCalStatusToPick,
-						   allocatingStatus=allocatingStatus,logConfigFile=logConfigFile)
+						   allocatingStatus=allocatingStatus,logConfigFile=logConfigFile,appName=appName)
 	except ValueError, v:
-		logEx('ValueError: ',v)
 		raise v
 	except Exception, e:
-		print 'Exception while getting config:', e
 		raise e
 	finally:
 		pass
 
 	return configObj
-
-
-
-# class Dimension:
-# 	def __init__(self, width, height):
-# 		self.__width = width
-# 		self.__height = height
-#
-# 	# @property
-# 	def width(self):
-# 		return self.__width
-#
-# 	# @property
-# 	def height(self):
-# 		return self.__height
-#
-# def testObject():
-# 	d = Dimension(800, 400)
-#
-# 	# print d.width
-# 	# print d.height
-# 	return d
-#
-# # testObject()
