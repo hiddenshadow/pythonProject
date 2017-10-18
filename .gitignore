@@ -2,5 +2,11 @@
 *.log
 .idea/workspace.xml
 
+allocator/*.pyc
+utils/*.pyc
+
 configuration/local_config.cfg
 configuration/config.cfg
+
+allocator/Core.pyc
+

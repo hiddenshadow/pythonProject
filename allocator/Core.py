@@ -81,7 +81,7 @@ class Allocator:
 
 			for agent in agents:
 
-				logging.debug('Assigning to agent - '+str(agent)+'\n')
+				logging.debug('Assigning to agent - '+str(agent))
 				agentId = agent[0]
 				rem = (self.getRemCountForAgent(agentId,assignlimit,allocatingStatus,host,user,password,database,port))
 				if rem > 0:
@@ -92,7 +92,7 @@ class Allocator:
 				else:
 					logging.info('No more assignment required for agent:'+str(agent))
 
-				logging.info("Total calls assigned: %s",totalCals)
+			logging.info("Total calls assigned: %s",totalCals)
 		except Exception, e:
 			logging.error('Exception while allocating')
 			raise e
