@@ -19,7 +19,7 @@ def getConnection(host,user,password,database,port):
 
 @timeit
 def executeSelectQuery(query,host,user,password,database,port):
-	conn=cursor=res=None
+	conn=cursor=None
 	try:
 		conn = getConnection(host,user,password,database,port)
 		cursor = conn.cursor()		

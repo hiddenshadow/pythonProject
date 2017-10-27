@@ -33,7 +33,7 @@ def execute():
 
         initLogger(logConfigFile)
 
-        app_name=configObj.appName();
+        app_name=configObj.appName()
         logging.info('Starting '+app_name+'\n')
 
         allocatorObj = Core.Allocator(configObj)
@@ -49,7 +49,6 @@ def execute():
         pass
 
     sys.exit()
-    return
 
 def initLogger(log_config_file):
     print 'Using log config file: '+log_config_file

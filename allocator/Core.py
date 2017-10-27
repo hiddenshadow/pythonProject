@@ -64,7 +64,6 @@ class Allocator:
 
 			allocatingStatus=configObj.allocatingStatus()
 			assignlimit = configObj.assignCount()
-			role = configObj.role()
 			host= configObj.host()
 			user= configObj.user()
 			password= configObj.password()
